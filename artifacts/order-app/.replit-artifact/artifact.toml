@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "SVLT Order Management"
+version = "1.0.0"
+id = "artifacts/order-app"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18942
+
+[services.development]
+run = "pnpm --filter @workspace/order-app run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/order-app", "run", "build" ]
+publicDir = "artifacts/order-app/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18942"
+BASE_PATH = "/"

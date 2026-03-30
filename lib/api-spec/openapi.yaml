@@ -1,15 +1,18 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SVLT Order Management API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: forms
+    description: Form management
+  - name: submissions
+    description: Order submissions
 paths:
   /healthz:
     get:
@@ -24,6 +27,226 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /forms:
+    get:
+      operationId: listForms
+      tags: [forms]
+      summary: List all forms
+      responses:
+        "200":
+          description: List of forms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Form"
+    post:
+      operationId: createForm
+      tags: [forms]
+      summary: Create a new form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFormRequest"
+      responses:
+        "201":
+          description: Form created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+
+  /forms/{formId}:
+    get:
+      operationId: getForm
+      tags: [forms]
+      summary: Get a form by ID
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Form details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+        "404":
+          description: Form not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateForm
+      tags: [forms]
+      summary: Update a form
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFormRequest"
+      responses:
+        "200":
+          description: Form updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+        "404":
+          description: Form not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteForm
+      tags: [forms]
+      summary: Delete a form
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Form deleted
+        "404":
+          description: Form not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /forms/{formId}/publish:
+    post:
+      operationId: publishForm
+      tags: [forms]
+      summary: Publish a form and get a public link
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Form published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+
+  /forms/{formId}/submissions:
+    get:
+      operationId: getFormSubmissions
+      tags: [submissions]
+      summary: Get submissions for a form
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of submissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Submission"
+    post:
+      operationId: submitForm
+      tags: [submissions]
+      summary: Submit an order
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitOrderRequest"
+      responses:
+        "201":
+          description: Order submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Submission"
+        "404":
+          description: Form not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /forms/{formId}/submissions/export:
+    get:
+      operationId: exportSubmissions
+      tags: [submissions]
+      summary: Export submissions as Excel
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Excel file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+
+  /forms/public/{slug}:
+    get:
+      operationId: getPublicForm
+      tags: [forms]
+      summary: Get a published form by slug (public link)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Public form details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+        "404":
+          description: Form not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +257,226 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+
+    FormItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+          nullable: true
+        maxQuantity:
+          type: integer
+          default: 10
+      required:
+        - id
+        - name
+        - price
+
+    Form:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        slug:
+          type: string
+          nullable: true
+        isPublished:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FormItem"
+        deliveryMode:
+          type: string
+          default: "Pickup Only"
+        paymentMethod:
+          type: string
+          default: "Cash on Delivery (COD)"
+        orderDeadline:
+          type: string
+          nullable: true
+        pickupTime:
+          type: string
+          nullable: true
+        pickupLocation:
+          type: string
+          nullable: true
+        googleSheetId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - title
+        - isPublished
+        - items
+        - deliveryMode
+        - paymentMethod
+        - createdAt
+        - updatedAt
+
+    CreateFormRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FormItem"
+        deliveryMode:
+          type: string
+          default: "Pickup Only"
+        paymentMethod:
+          type: string
+          default: "Cash on Delivery (COD)"
+        orderDeadline:
+          type: string
+          nullable: true
+        pickupTime:
+          type: string
+          nullable: true
+        pickupLocation:
+          type: string
+          nullable: true
+      required:
+        - title
+
+    UpdateFormRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FormItem"
+        deliveryMode:
+          type: string
+          nullable: true
+        paymentMethod:
+          type: string
+          nullable: true
+        orderDeadline:
+          type: string
+          nullable: true
+        pickupTime:
+          type: string
+          nullable: true
+        pickupLocation:
+          type: string
+          nullable: true
+
+    OrderItem:
+      type: object
+      properties:
+        itemId:
+          type: string
+        itemName:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        total:
+          type: number
+      required:
+        - itemId
+        - itemName
+        - price
+        - quantity
+        - total
+
+    SubmitOrderRequest:
+      type: object
+      properties:
+        customerName:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        totalItems:
+          type: integer
+        totalAmount:
+          type: number
+      required:
+        - customerName
+        - phone
+        - address
+        - items
+        - totalItems
+        - totalAmount
+
+    Submission:
+      type: object
+      properties:
+        id:
+          type: string
+        formId:
+          type: string
+        customerName:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        totalItems:
+          type: integer
+        totalAmount:
+          type: number
+        paymentMethod:
+          type: string
+        deliveryMode:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - formId
+        - customerName
+        - phone
+        - address
+        - items
+        - totalItems
+        - totalAmount
+        - paymentMethod
+        - deliveryMode
+        - createdAt
