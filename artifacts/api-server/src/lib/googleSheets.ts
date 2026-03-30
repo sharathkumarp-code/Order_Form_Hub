@@ -1,7 +1,5 @@
 import { logger } from "./logger.js";
 
-let googleSheetsClient: any = null;
-
 async function getGoogleSheetsClient() {
   if (!process.env.REPLIT_CONNECTORS_HOSTNAME) {
     return null;
@@ -53,9 +51,35 @@ export async function appendToGoogleSheet(
   });
 }
 
-export async function createSheetForForm(formTitle: string): Promise<string | null> {
+export async function shareSheetWithEmail(sheetId: string, email: string) {
+  const client = await getGoogleSheetsClient();
+  if (!client) return;
+
+  // Use Drive API via the same credentials to share
+  try {
+    const { google } = await import("googleapis");
+    const drive = google.drive({ version: "v3", auth: (client as any)._requestQueue?.auth ?? (client as any).auth });
+    await drive.permissions.create({
+      fileId: sheetId,
+      requestBody: {
+        role: "writer",
+        type: "user",
+        emailAddress: email,
+      },
+      sendNotificationEmail: true,
+    });
+  } catch (err) {
+    logger.warn({ err }, "Failed to share sheet via Drive API");
+  }
+}
+
+export async function createSheetForForm(
+  formTitle: string,
+  email: string,
+): Promise<{ sheetId: string; sheetUrl: string } | null> {
   const client = await getGoogleSheetsClient();
   if (!client) {
+    logger.warn("Google Sheets client not available - cannot create sheet");
     return null;
   }
 
@@ -86,7 +110,10 @@ export async function createSheetForForm(formTitle: string): Promise<string | nu
                     userEnteredValue: { stringValue: h },
                     userEnteredFormat: {
                       backgroundColor: { red: 0.26, green: 0.52, blue: 0.96 },
-                      textFormat: { foregroundColor: { red: 1, green: 1, blue: 1 }, bold: true },
+                      textFormat: {
+                        foregroundColor: { red: 1, green: 1, blue: 1 },
+                        bold: true,
+                      },
                     },
                   })),
                 },
@@ -98,5 +125,13 @@ export async function createSheetForForm(formTitle: string): Promise<string | nu
     },
   });
 
-  return response.data.spreadsheetId ?? null;
+  const sheetId = response.data.spreadsheetId;
+  if (!sheetId) return null;
+
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}`;
+
+  // Share with the provided email
+  await shareSheetWithEmail(sheetId, email);
+
+  return { sheetId, sheetUrl };
 }

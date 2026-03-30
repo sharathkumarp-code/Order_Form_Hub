@@ -16,4 +16,5 @@ export interface UpdateFormRequest {
   orderDeadline?: string | null;
   pickupTime?: string | null;
   pickupLocation?: string | null;
+  googleSheetEmail?: string | null;
 }

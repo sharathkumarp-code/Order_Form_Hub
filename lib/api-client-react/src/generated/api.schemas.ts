@@ -35,6 +35,8 @@ export interface Form {
   pickupTime?: string | null;
   pickupLocation?: string | null;
   googleSheetId?: string | null;
+  googleSheetEmail?: string | null;
+  googleSheetUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -48,6 +50,7 @@ export interface CreateFormRequest {
   orderDeadline?: string | null;
   pickupTime?: string | null;
   pickupLocation?: string | null;
+  googleSheetEmail?: string | null;
 }
 
 export interface UpdateFormRequest {
@@ -59,6 +62,7 @@ export interface UpdateFormRequest {
   orderDeadline?: string | null;
   pickupTime?: string | null;
   pickupLocation?: string | null;
+  googleSheetEmail?: string | null;
 }
 
 export interface OrderItem {

@@ -8,7 +8,7 @@ import {
   UpdateFormBody,
   SubmitFormBody,
 } from "@workspace/api-zod";
-import { appendToGoogleSheet } from "../lib/googleSheets.js";
+import { appendToGoogleSheet, createSheetForForm, shareSheetWithEmail } from "../lib/googleSheets.js";
 
 const router: IRouter = Router();
 
@@ -18,6 +18,24 @@ function serializeForm(form: typeof formsTable.$inferSelect) {
     createdAt: form.createdAt.toISOString(),
     updatedAt: form.updatedAt.toISOString(),
   };
+}
+
+async function setupGoogleSheet(formId: string, formTitle: string, email: string): Promise<{ sheetId: string | null; sheetUrl: string | null }> {
+  try {
+    const result = await createSheetForForm(formTitle, email);
+    if (result) {
+      await db.update(formsTable).set({
+        googleSheetId: result.sheetId,
+        googleSheetUrl: result.sheetUrl,
+        googleSheetEmail: email,
+        updatedAt: new Date(),
+      }).where(eq(formsTable.id, formId));
+      return result;
+    }
+  } catch (err) {
+    // Non-fatal
+  }
+  return { sheetId: null, sheetUrl: null };
 }
 
 function serializeSubmission(sub: typeof submissionsTable.$inferSelect) {
@@ -43,10 +61,11 @@ router.get("/forms", async (req, res) => {
 router.post("/forms", async (req, res) => {
   try {
     const body = CreateFormBody.parse(req.body);
+    const formId = nanoid();
     const form = await db
       .insert(formsTable)
       .values({
-        id: nanoid(),
+        id: formId,
         title: body.title,
         description: body.description ?? null,
         items: (body.items ?? []) as any,
@@ -55,9 +74,20 @@ router.post("/forms", async (req, res) => {
         orderDeadline: body.orderDeadline ?? null,
         pickupTime: body.pickupTime ?? null,
         pickupLocation: body.pickupLocation ?? null,
+        googleSheetEmail: (body as any).googleSheetEmail ?? null,
       })
       .returning();
-    res.status(201).json(serializeForm(form[0]));
+
+    // Auto-create Google Sheet if email provided
+    if ((body as any).googleSheetEmail) {
+      setupGoogleSheet(formId, body.title, (body as any).googleSheetEmail).catch((e) =>
+        req.log.warn({ e }, "Google Sheet setup failed"),
+      );
+    }
+
+    // Return immediately with latest data
+    const latest = await db.select().from(formsTable).where(eq(formsTable.id, formId));
+    res.status(201).json(serializeForm(latest[0] ?? form[0]));
   } catch (err) {
     req.log.error(err);
     res.status(400).json({ error: "bad_request", message: String(err) });
@@ -112,6 +142,9 @@ router.put("/forms/:formId", async (req, res) => {
     if (!existing[0]) {
       return res.status(404).json({ error: "not_found", message: "Form not found" });
     }
+    const newEmail = (body as any).googleSheetEmail as string | undefined;
+    const emailChanged = newEmail !== undefined && newEmail !== existing[0].googleSheetEmail;
+
     const updated = await db
       .update(formsTable)
       .set({
@@ -123,10 +156,22 @@ router.put("/forms/:formId", async (req, res) => {
         ...(body.orderDeadline !== undefined && { orderDeadline: body.orderDeadline }),
         ...(body.pickupTime !== undefined && { pickupTime: body.pickupTime }),
         ...(body.pickupLocation !== undefined && { pickupLocation: body.pickupLocation }),
+        ...(newEmail !== undefined && { googleSheetEmail: newEmail }),
+        // Clear sheet data if email changed so we create a new sheet
+        ...(emailChanged && { googleSheetId: null, googleSheetUrl: null }),
         updatedAt: new Date(),
       })
       .where(eq(formsTable.id, formId))
       .returning();
+
+    // If email changed or newly added, set up a new Google Sheet
+    if (emailChanged && newEmail) {
+      const titleForSheet = body.title ?? existing[0].title;
+      setupGoogleSheet(formId, titleForSheet, newEmail).catch((e) =>
+        req.log.warn({ e }, "Google Sheet setup failed"),
+      );
+    }
+
     res.json(serializeForm(updated[0]));
   } catch (err) {
     req.log.error(err);

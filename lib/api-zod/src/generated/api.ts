@@ -45,6 +45,8 @@ export const ListFormsResponseItem = zod.object({
   pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   googleSheetId: zod.string().nullish(),
+  googleSheetEmail: zod.string().nullish(),
+  googleSheetUrl: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -78,6 +80,7 @@ export const CreateFormBody = zod.object({
   orderDeadline: zod.string().nullish(),
   pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
+  googleSheetEmail: zod.string().nullish(),
 });
 
 /**
@@ -114,6 +117,8 @@ export const GetFormResponse = zod.object({
   pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   googleSheetId: zod.string().nullish(),
+  googleSheetEmail: zod.string().nullish(),
+  googleSheetUrl: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -148,6 +153,7 @@ export const UpdateFormBody = zod.object({
   orderDeadline: zod.string().nullish(),
   pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
+  googleSheetEmail: zod.string().nullish(),
 });
 
 export const updateFormResponseItemsItemMaxQuantityDefault = 10;
@@ -177,6 +183,8 @@ export const UpdateFormResponse = zod.object({
   pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   googleSheetId: zod.string().nullish(),
+  googleSheetEmail: zod.string().nullish(),
+  googleSheetUrl: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -222,6 +230,8 @@ export const PublishFormResponse = zod.object({
   pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   googleSheetId: zod.string().nullish(),
+  googleSheetEmail: zod.string().nullish(),
+  googleSheetUrl: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -325,6 +335,8 @@ export const GetPublicFormResponse = zod.object({
   pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   googleSheetId: zod.string().nullish(),
+  googleSheetEmail: zod.string().nullish(),
+  googleSheetUrl: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });

@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Upload, Plus, Trash2, Save, FileSpreadsheet } from "lucide-react";
+import { ArrowLeft, Upload, Plus, Trash2, Save, FileSpreadsheet, Sheet, CheckCircle2, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
-import { useCreateForm, useUpdateForm, useGetForm } from "@workspace/api-client-react";
+import { useCreateForm, useUpdateForm, useGetForm, useListForms } from "@workspace/api-client-react";
 import type { FormItem } from "@workspace/api-client-react";
 import { parseExcelItems } from "@/lib/excel";
 import { generateId, formatCurrency } from "@/lib/utils";
@@ -28,12 +28,23 @@ export default function FormBuilder() {
     query: { enabled: isEdit }
   });
 
+  // Get all forms to extract previously used emails
+  const { data: allForms } = useListForms();
+  const previousEmails = Array.from(
+    new Set(
+      (allForms || [])
+        .map((f: any) => f.googleSheetEmail)
+        .filter(Boolean) as string[]
+    )
+  ).filter(e => !isEdit || e !== existingForm?.googleSheetEmail);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const [pickupTime, setPickupTime] = useState("");
   const [orderDeadline, setOrderDeadline] = useState("");
   const [items, setItems] = useState<FormItem[]>([]);
+  const [googleSheetEmail, setGoogleSheetEmail] = useState("");
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,6 +56,7 @@ export default function FormBuilder() {
       setPickupTime(existingForm.pickupTime || "");
       setOrderDeadline(existingForm.orderDeadline || "");
       setItems(existingForm.items);
+      setGoogleSheetEmail((existingForm as any).googleSheetEmail || "");
     }
   }, [isEdit, existingForm]);
 
@@ -58,14 +70,11 @@ export default function FormBuilder() {
         toast({ title: "No valid items found in Excel file", variant: "destructive" });
         return;
       }
-      
       setItems(prev => [...prev, ...parsedItems]);
       toast({ title: `Successfully imported ${parsedItems.length} items` });
     } catch (error) {
       toast({ title: "Failed to parse Excel file", description: "Ensure it has 'Name' and 'Price' columns.", variant: "destructive" });
     }
-    
-    // Reset file input
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -91,7 +100,7 @@ export default function FormBuilder() {
       return;
     }
 
-    const payload = {
+    const payload: any = {
       title,
       description,
       pickupLocation,
@@ -99,7 +108,8 @@ export default function FormBuilder() {
       orderDeadline,
       items,
       deliveryMode: "Pickup Only",
-      paymentMethod: "Cash on Delivery (COD)"
+      paymentMethod: "Cash on Delivery (COD)",
+      googleSheetEmail: googleSheetEmail.trim() || null,
     };
 
     try {
@@ -108,7 +118,11 @@ export default function FormBuilder() {
         toast({ title: "Form updated successfully" });
       } else {
         await createMutation.mutateAsync({ data: payload });
-        toast({ title: "Form created successfully" });
+        if (googleSheetEmail.trim()) {
+          toast({ title: "Form created! Google Sheet is being set up...", description: "Check your email for the sheet link shortly." });
+        } else {
+          toast({ title: "Form created successfully" });
+        }
       }
       queryClient.invalidateQueries({ queryKey: ["/api/forms"] });
       setLocation("/admin");
@@ -118,6 +132,8 @@ export default function FormBuilder() {
   };
 
   const isPending = createMutation.isPending || updateMutation.isPending;
+  const hasExistingSheet = isEdit && !!(existingForm as any)?.googleSheetId;
+  const existingSheetUrl = isEdit && (existingForm as any)?.googleSheetUrl;
 
   if (isEdit && isFetching) {
     return <AdminLayout><div className="flex p-10 items-center justify-center">Loading...</div></AdminLayout>;
@@ -208,6 +224,75 @@ export default function FormBuilder() {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Google Sheets Section */}
+          <div className="bg-card rounded-2xl p-6 md:p-8 shadow-sm border border-border/60">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                <Sheet className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-foreground">Google Sheets Auto-Sync</h2>
+                <p className="text-xs text-muted-foreground">Orders will be automatically sent to a Google Sheet</p>
+              </div>
+            </div>
+
+            {hasExistingSheet ? (
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200 mb-4">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-emerald-800">Google Sheet connected</p>
+                  <p className="text-xs text-emerald-600 truncate">{(existingForm as any)?.googleSheetEmail}</p>
+                </div>
+                {existingSheetUrl && (
+                  <a href={existingSheetUrl} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-xs text-emerald-700 hover:text-emerald-900 font-medium shrink-0">
+                    Open Sheet <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+            ) : null}
+
+            <div className="space-y-3">
+              <Label htmlFor="googleSheetEmail" className="text-sm font-semibold text-foreground block">
+                Google Account Email
+                <span className="ml-2 text-xs font-normal text-muted-foreground">(optional)</span>
+              </Label>
+
+              {/* Previously used emails */}
+              {previousEmails.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <span className="text-xs text-muted-foreground self-center">Previously used:</span>
+                  {previousEmails.map(email => (
+                    <button
+                      key={email}
+                      type="button"
+                      onClick={() => setGoogleSheetEmail(email)}
+                      className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                        googleSheetEmail === email
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-muted/50 text-foreground border-border hover:border-primary/50 hover:bg-primary/5"
+                      }`}
+                    >
+                      {email}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <Input
+                id="googleSheetEmail"
+                type="email"
+                value={googleSheetEmail}
+                onChange={(e) => setGoogleSheetEmail(e.target.value)}
+                placeholder="yourname@gmail.com"
+                className="rounded-xl"
+              />
+              <p className="text-xs text-muted-foreground">
+                A Google Sheet titled <strong>"Orders: {title || 'Form Title'}"</strong> will be automatically created and shared with this email. Every order submission will appear as a new row.
+              </p>
             </div>
           </div>
 

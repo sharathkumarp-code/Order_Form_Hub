@@ -20,6 +20,8 @@ export interface Form {
   pickupTime?: string | null;
   pickupLocation?: string | null;
   googleSheetId?: string | null;
+  googleSheetEmail?: string | null;
+  googleSheetUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 }
