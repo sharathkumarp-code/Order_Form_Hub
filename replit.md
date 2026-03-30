@@ -91,6 +91,20 @@ Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used b
 
 Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
 
+## Google Sheets Integration
+
+Google Sheets auto-sync is implemented in `artifacts/api-server/src/lib/googleSheets.ts` and wired into form creation/submission.
+
+**To enable it, one of two options is needed:**
+
+### Option A — Replit Google Sheets Connector (preferred)
+Use `proposeIntegration("connector:ccfg_google-sheet_E42A9F6CA62546F68A1FECA0E8")` and ask the user to click "Allow" in the OAuth dialog. The user has dismissed this twice — they may need an explanation that clicking "Allow" is a one-time step that grants the app read/write access to their Google Sheets.
+
+### Option B — Google Service Account credentials (alternative, no OAuth needed)
+1. User creates a Service Account in Google Cloud Console with Sheets + Drive API enabled
+2. User downloads the JSON key and provides it as an environment secret `GOOGLE_SERVICE_ACCOUNT_JSON`
+3. Update `getGoogleSheetsClient()` in `googleSheets.ts` to use the service account JSON instead of the Replit connector
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
