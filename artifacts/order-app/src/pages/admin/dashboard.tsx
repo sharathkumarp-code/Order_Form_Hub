@@ -139,8 +139,12 @@ export default function Dashboard() {
                       </Link>
                     </DropdownMenuItem>
                     {form.isPublished && form.slug && (
-                      <DropdownMenuItem onClick={() => copyLink(form.slug!)} className="cursor-pointer">
-                        <Copy className="w-4 h-4 mr-2" /> Copy Link
+                      <DropdownMenuItem
+                        onClick={() => window.open(`${import.meta.env.BASE_URL}form/${form.slug}`, '_blank')}
+                        className="cursor-pointer"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        View Live
                       </DropdownMenuItem>
                     )}
                     {!form.isPublished && (
@@ -182,10 +186,10 @@ export default function Dashboard() {
                   <Button
                     variant="default"
                     className="flex-1 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 shadow-none font-medium"
-                    onClick={() => window.open(`${import.meta.env.BASE_URL}form/${form.slug}`, '_blank')}
+                    onClick={() => copyLink(form.slug!)}
                   >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    View Live
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy Link
                   </Button>
                 )}
               </div>

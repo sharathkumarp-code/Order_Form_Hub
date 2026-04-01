@@ -25,7 +25,7 @@ export default function FormBuilder() {
   const updateMutation = useUpdateForm();
 
   const { data: existingForm, isLoading: isFetching } = useGetForm(id || "", {
-    query: { 
+    query: {
       enabled: isEdit,
       queryKey: getGetFormQueryKey(id || "")
     }
@@ -189,7 +189,7 @@ export default function FormBuilder() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="pickupTime" className="text-sm font-semibold text-foreground mb-1.5 block">Pickup Time</Label>
+                  <Label htmlFor="pickupTime" className="text-sm font-semibold text-foreground mb-1.5 block">Store Hours</Label>
                   <Input
                     id="pickupTime"
                     value={pickupTime}

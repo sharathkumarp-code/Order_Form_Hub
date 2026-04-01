@@ -60,7 +60,7 @@ export default function PublicOrderForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!form) return;
     if (!customerName.trim() || !phone.trim() || !address.trim()) {
       toast({ title: "Please fill in all contact details", variant: "destructive" });
@@ -84,7 +84,7 @@ export default function PublicOrderForm() {
         }
       });
       setIsSubmitted(true);
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
     } catch (err) {
       toast({ title: "Failed to submit order. Please try again.", variant: "destructive" });
     }
@@ -147,7 +147,7 @@ export default function PublicOrderForm() {
   return (
     <div className="min-h-screen bg-[#F0F4F8] py-8 px-4 sm:px-6 font-sans">
       <div className="max-w-2xl mx-auto space-y-6 pb-24">
-        
+
         {/* Form Header Card */}
         <div className="bg-card rounded-2xl shadow-md shadow-black/5 overflow-hidden border border-border/50">
           <div className="h-3 w-full bg-primary"></div>
@@ -160,7 +160,7 @@ export default function PublicOrderForm() {
                 {form.description}
               </p>
             )}
-            
+
             <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-border">
               {form.pickupLocation && (
                 <div className="flex items-start text-sm text-foreground">
@@ -175,7 +175,7 @@ export default function PublicOrderForm() {
                 <div className="flex items-start text-sm text-foreground">
                   <Clock className="w-4 h-4 text-primary mr-3 mt-0.5 shrink-0" />
                   <div>
-                    <span className="font-semibold block">Pickup Time</span>
+                    <span className="font-semibold block">Store Hours</span>
                     <span className="text-muted-foreground">{form.pickupTime}</span>
                   </div>
                 </div>
@@ -191,33 +191,33 @@ export default function PublicOrderForm() {
               <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm mr-3">1</span>
               Your Details
             </h3>
-            
+
             <div className="space-y-5">
               <div>
                 <Label htmlFor="name" className="text-[15px] font-medium text-foreground block mb-2">
                   Full Name <span className="text-destructive">*</span>
                 </Label>
-                <Input 
-                  id="name" 
+                <Input
+                  id="name"
                   required
                   value={customerName}
                   onChange={e => setCustomerName(e.target.value)}
-                  placeholder="Your answer" 
+                  placeholder="Your answer"
                   className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary shadow-none h-10 text-base"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="phone" className="text-[15px] font-medium text-foreground block mb-2">
                   Phone Number <span className="text-destructive">*</span>
                 </Label>
-                <Input 
-                  id="phone" 
+                <Input
+                  id="phone"
                   required
                   type="tel"
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
-                  placeholder="Your answer" 
+                  placeholder="Your answer"
                   className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary shadow-none h-10 text-base"
                 />
               </div>
@@ -226,12 +226,12 @@ export default function PublicOrderForm() {
                 <Label htmlFor="address" className="text-[15px] font-medium text-foreground block mb-2">
                   Address (for reference) <span className="text-destructive">*</span>
                 </Label>
-                <Textarea 
-                  id="address" 
+                <Textarea
+                  id="address"
                   required
                   value={address}
                   onChange={e => setAddress(e.target.value)}
-                  placeholder="Your answer" 
+                  placeholder="Your answer"
                   className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary shadow-none min-h-[40px] resize-y text-base"
                 />
               </div>
@@ -260,14 +260,14 @@ export default function PublicOrderForm() {
                         {formatCurrency(item.price)}
                       </div>
                       <div className="flex items-center bg-card border border-border rounded-lg p-1 shadow-sm">
-                        <button 
+                        <button
                           type="button"
                           onClick={() => handleQuantityChange(item.id, -1)}
                           className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors disabled:opacity-50"
                           disabled={qty === 0}
                         >-</button>
                         <span className="w-8 text-center font-medium text-foreground">{qty}</span>
-                        <button 
+                        <button
                           type="button"
                           onClick={() => handleQuantityChange(item.id, 1, item.maxQuantity)}
                           className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
@@ -292,8 +292,8 @@ export default function PublicOrderForm() {
             <div className="text-sm text-muted-foreground font-medium mb-0.5">Total ({totalItems} items)</div>
             <div className="text-2xl font-bold text-foreground">{formatCurrency(totalAmount)}</div>
           </div>
-          <Button 
-            onClick={handleSubmit} 
+          <Button
+            onClick={handleSubmit}
             disabled={totalItems === 0 || submitMutation.isPending}
             className="rounded-xl shadow-lg shadow-primary/25 px-8 py-6 h-auto text-lg font-semibold w-auto min-w-[140px]"
           >
