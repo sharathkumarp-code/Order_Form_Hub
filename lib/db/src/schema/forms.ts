@@ -24,9 +24,7 @@ export const formsTable = pgTable("forms", {
   orderDeadline: text("order_deadline"),
   pickupTime: text("pickup_time"),
   pickupLocation: text("pickup_location"),
-  googleSheetId: text("google_sheet_id"),
-  googleSheetEmail: text("google_sheet_email"),
-  googleSheetUrl: text("google_sheet_url"),
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

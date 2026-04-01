@@ -16,14 +16,14 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       {navItems.map((item) => {
         const isActive = location === item.href || (item.href !== "/admin" && location.startsWith(item.href));
         return (
-          <Link 
-            key={item.href} 
+          <Link
+            key={item.href}
             href={item.href}
             onClick={onClick}
             className={cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium",
-              isActive 
-                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+              isActive
+                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
@@ -44,7 +44,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             <Store className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="font-display font-bold text-lg leading-tight text-foreground">SVLT Kitchen</h1>
+            <h1 className="font-display font-bold text-lg leading-tight text-foreground">Kurryzo Kitchen</h1>
             <p className="text-xs text-muted-foreground font-medium">Order Management</p>
           </div>
         </div>
@@ -59,7 +59,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-md">
             <Store className="w-4 h-4" />
           </div>
-          <h1 className="font-display font-bold text-foreground">SVLT Kitchen</h1>
+          <h1 className="font-display font-bold text-foreground">Kurryzo Kitchen</h1>
         </div>
         <Sheet>
           <SheetTrigger asChild>

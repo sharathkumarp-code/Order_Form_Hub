@@ -1,6 +1,6 @@
 import { useParams, Link } from "wouter";
 import { AdminLayout } from "@/components/layout/admin-layout";
-import { useGetFormSubmissions, useGetForm, useExportSubmissions } from "@workspace/api-client-react";
+import { useGetFormSubmissions, useGetForm, useExportSubmissions, getExportSubmissionsQueryKey } from "@workspace/api-client-react";
 import { ArrowLeft, Download, RefreshCw, CalendarDays, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -13,7 +13,10 @@ export default function Submissions() {
   const { data: form, isLoading: isFormLoading } = useGetForm(id || "");
   const { data: submissions, isLoading: isSubLoading, refetch } = useGetFormSubmissions(id || "");
   const exportMutation = useExportSubmissions(id || "", {
-    query: { enabled: false } // We don't want it to run automatically, wait, useExportSubmissions is a query? No it's an API call. Orval generated it as a query.
+    query: { 
+      enabled: false,
+      queryKey: getExportSubmissionsQueryKey(id || "")
+    }
   });
 
   const handleExport = async () => {

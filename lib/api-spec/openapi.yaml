@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Api
   version: 0.1.0
-  description: SVLT Order Management API
+  description: Kurryzo Order Management API
 servers:
   - url: /api
     description: Base API path
@@ -321,15 +321,7 @@ components:
         pickupLocation:
           type: string
           nullable: true
-        googleSheetId:
-          type: string
-          nullable: true
-        googleSheetEmail:
-          type: string
-          nullable: true
-        googleSheetUrl:
-          type: string
-          nullable: true
+
         createdAt:
           type: string
         updatedAt:
@@ -371,9 +363,7 @@ components:
         pickupLocation:
           type: string
           nullable: true
-        googleSheetEmail:
-          type: string
-          nullable: true
+
       required:
         - title
 
@@ -404,9 +394,7 @@ components:
         pickupLocation:
           type: string
           nullable: true
-        googleSheetEmail:
-          type: string
-          nullable: true
+
 
     OrderItem:
       type: object

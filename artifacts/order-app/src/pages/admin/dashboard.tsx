@@ -3,24 +3,24 @@ import { AdminLayout } from "@/components/layout/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { format } from "date-fns";
-import { 
-  Plus, 
-  MoreVertical, 
-  FileEdit, 
-  Trash2, 
-  Globe, 
+import {
+  Plus,
+  MoreVertical,
+  FileEdit,
+  Trash2,
+  Globe,
   ListOrdered,
   Share2,
   Copy,
   ExternalLink,
   ClipboardList
 } from "lucide-react";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
@@ -69,8 +69,8 @@ export default function Dashboard() {
           <h1 className="text-3xl font-display font-bold text-foreground">Order Forms</h1>
           <p className="text-muted-foreground mt-1">Manage your menus and collect orders.</p>
         </div>
-        <Link 
-          href="/admin/forms/new" 
+        <Link
+          href="/admin/forms/new"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all"
         >
           <Plus className="w-5 h-5" />
@@ -97,8 +97,8 @@ export default function Dashboard() {
           <p className="text-muted-foreground max-w-md mb-6">
             Create your first form to start accepting orders. You can upload your items via Excel to get started quickly.
           </p>
-          <Link 
-            href="/admin/forms/new" 
+          <Link
+            href="/admin/forms/new"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl shadow-md hover:shadow-lg transition-all"
           >
             <Plus className="w-4 h-4" />
@@ -107,16 +107,16 @@ export default function Dashboard() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {forms?.map((form) => (
-            <div 
-              key={form.id} 
+          {Array.isArray(forms) && forms.map((form) => (
+            <div
+              key={form.id}
               className="bg-card rounded-2xl p-6 border border-border/60 shadow-sm hover:shadow-md transition-shadow relative group flex flex-col"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex flex-col items-start gap-2">
                   <Badge variant={form.isPublished ? "default" : "secondary"} className={
-                    form.isPublished 
-                      ? "bg-green-100 text-green-800 hover:bg-green-200 border-transparent shadow-none" 
+                    form.isPublished
+                      ? "bg-green-100 text-green-800 hover:bg-green-200 border-transparent shadow-none"
                       : "bg-gray-100 text-gray-700"
                   }>
                     {form.isPublished ? "Published" : "Draft"}
@@ -125,7 +125,7 @@ export default function Dashboard() {
                     {form.title}
                   </h3>
                 </div>
-                
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8 -mr-2 text-muted-foreground hover:text-foreground">
@@ -179,8 +179,8 @@ export default function Dashboard() {
                   </Button>
                 </Link>
                 {form.isPublished && form.slug && (
-                  <Button 
-                    variant="default" 
+                  <Button
+                    variant="default"
                     className="flex-1 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 shadow-none font-medium"
                     onClick={() => window.open(`${import.meta.env.BASE_URL}form/${form.slug}`, '_blank')}
                   >

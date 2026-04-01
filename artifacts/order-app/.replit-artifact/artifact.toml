@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "SVLT Order Management"
+title = "Kurryzo Order Management"
 version = "1.0.0"
 id = "artifacts/order-app"
 router = "path"
