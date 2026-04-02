@@ -124,28 +124,17 @@ export default function PublicOrderForm() {
     return (
       <div className="min-h-screen bg-[#F0F4F8] flex items-center justify-center p-4">
         <div className="bg-card p-10 rounded-3xl shadow-xl shadow-black/5 max-w-lg w-full text-center animate-in fade-in zoom-in duration-500">
-          <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10" />
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+            <h2 className="text-lg font-bold text-foreground">
+              Order Received!
+            </h2>
           </div>
-          <h2 className="text-3xl font-display font-bold text-foreground mb-3">Order Received!</h2>
-          <p className="text-muted-foreground mb-8 text-lg">
+          <p className="text-muted-foreground mb-8 text-md">
             Thank you, {customerName.split(' ')[0]}! Your order for {totalItems} items has been placed successfully.
           </p>
-          <div className="bg-muted/50 rounded-2xl p-6 mb-8 text-left">
-            <h4 className="font-semibold text-foreground mb-4 border-b border-border pb-2">Order Summary</h4>
-            <div className="space-y-3 mb-4">
-              {selectedItemsList.map((item, idx) => (
-                <div key={idx} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{item.quantity}x {item.itemName}</span>
-                  <span className="font-medium text-foreground">{formatCurrency(item.total)}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between pt-3 border-t border-border font-bold text-foreground">
-              <span>Total Amount</span>
-              <span className="text-primary">{formatCurrency(totalAmount)}</span>
-            </div>
-          </div>
           <div className="bg-muted/50 rounded-2xl p-6 mb-8 text-left">
             <div className="flex items-start text-sm text-foreground">
               <Store className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
@@ -176,6 +165,21 @@ export default function PublicOrderForm() {
                 <span className="font-semibold text-foreground">Pickup Time: </span>
                 {form.pickupTime}
               </p>
+            </div>
+          </div>
+          <div className="bg-muted/50 rounded-2xl p-6 mb-8 text-left">
+            <h4 className="font-semibold text-foreground mb-4 border-b border-border pb-2">Order Summary</h4>
+            <div className="space-y-3 mb-4">
+              {selectedItemsList.map((item, idx) => (
+                <div key={idx} className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">{item.quantity}x {item.itemName}</span>
+                  <span className="font-medium text-foreground">{formatCurrency(item.total)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between pt-3 border-t border-border font-bold text-foreground">
+              <span>Total Amount</span>
+              <span className="text-primary">{formatCurrency(totalAmount)}</span>
             </div>
           </div>
         </div>
