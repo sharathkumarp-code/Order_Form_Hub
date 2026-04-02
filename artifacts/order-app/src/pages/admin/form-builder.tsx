@@ -178,7 +178,7 @@ export default function FormBuilder() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-                <div>
+                {/* <div>
                   <Label htmlFor="pickupLocation" className="text-sm font-semibold text-foreground mb-1.5 block">Pickup Location</Label>
                   <Input
                     id="pickupLocation"
@@ -187,9 +187,9 @@ export default function FormBuilder() {
                     placeholder="e.g. Main Kitchen, Kurryzo"
                     className="rounded-xl"
                   />
-                </div>
+                </div> */}
                 <div>
-                  <Label htmlFor="pickupTime" className="text-sm font-semibold text-foreground mb-1.5 block">Store Hours</Label>
+                  <Label htmlFor="pickupTime" className="text-sm font-semibold text-foreground mb-1.5 block">Pickup Time</Label>
                   <Input
                     id="pickupTime"
                     value={pickupTime}
@@ -198,7 +198,7 @@ export default function FormBuilder() {
                     className="rounded-xl"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <Label htmlFor="orderDeadline" className="text-sm font-semibold text-foreground mb-1.5 block">Order Deadline</Label>
                   <Input
                     id="orderDeadline"
@@ -207,7 +207,7 @@ export default function FormBuilder() {
                     placeholder="e.g. Friday 10 PM"
                     className="rounded-xl"
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

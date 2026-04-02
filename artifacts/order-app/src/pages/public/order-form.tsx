@@ -7,8 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Store, Clock, MapPin, CheckCircle2, AlertCircle, ShoppingBag } from "lucide-react";
+import { Store, Clock, MapPin, CheckCircle2, AlertCircle, ShoppingBag, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export default function PublicOrderForm() {
   const { slug } = useParams();
@@ -139,6 +146,38 @@ export default function PublicOrderForm() {
               <span className="text-primary">{formatCurrency(totalAmount)}</span>
             </div>
           </div>
+          <div className="bg-muted/50 rounded-2xl p-6 mb-8 text-left">
+            <div className="flex items-start text-sm text-foreground">
+              <Store className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">
+                  <span className="font-semibold text-foreground">Pickup Location: </span>
+                  Kurryzo
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start text-sm text-foreground">
+              <MapPin className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground mb-1">
+                <span className="font-semibold text-foreground">Address: </span>
+                Shop No.3, 1621/J2, 16th Main Road, Anna Nagar West, Anna Nagar, Chennai, Tamil Nadu 600040.
+              </p>
+            </div>
+            <div className="flex items-start text-sm text-foreground">
+              <Phone className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground mb-1">
+                <span className="font-semibold text-foreground">Phone: </span>
+                7845129905
+              </p>
+            </div>
+            <div className="flex items-start text-sm text-foreground">
+              <Clock className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground mb-1">
+                <span className="font-semibold text-foreground">Pickup Time: </span>
+                {form.pickupTime}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -149,38 +188,103 @@ export default function PublicOrderForm() {
       <div className="max-w-2xl mx-auto space-y-6 pb-24">
 
         {/* Form Header Card */}
-        <div className="bg-card rounded-2xl shadow-md shadow-black/5 overflow-hidden border border-border/50">
-          <div className="h-3 w-full bg-primary"></div>
-          <div className="p-8">
-            <h1 className="text-3xl font-display font-bold text-foreground leading-tight mb-4">
+        <div className="bg-card rounded-2xl shadow-md shadow-black/5 overflow-hidden border border-border/50 max-h-[420px]">
+
+          {/* Reduced Carousel */}
+          <div className="relative group overflow-hidden h-28 sm:h-40 bg-black">
+            <Carousel
+              className="w-full h-full"
+              setApi={(api) => {
+                if (api) {
+                  const interval = setInterval(() => {
+                    api.scrollNext();
+                  }, 4000);
+                  return () => clearInterval(interval);
+                }
+              }}
+              opts={{ loop: true, align: "start" }}
+            >
+              <CarouselContent className="h-full ml-0">
+                {["image.png", "image (3).png", "image (4).png", "image (5).png"].map((filename, i) => (
+                  <CarouselItem key={i} className="pl-0 h-full">
+                    <div className="relative h-full w-full flex items-center justify-center bg-black">
+                      <img
+                        src={`/carousel/banner/${filename}`}
+                        alt={`Banner ${i + 1}`}
+                        className="max-h-full object-contain"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
+          {/* Reduced Content */}
+          <div className="p-4 pt-3">
+
+            <h1 className="text-xl font-bold mb-2 leading-snug">
               {form.title}
             </h1>
+
             {form.description && (
-              <p className="text-muted-foreground whitespace-pre-wrap mb-6 text-[15px] leading-relaxed">
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                 {form.description}
               </p>
             )}
+            <div className="flex items-start text-sm text-foreground">
+              <Store className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">
+                  <span className="font-semibold text-foreground">Pickup Location: </span>
+                  Kurryzo
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start text-sm text-foreground">
+              <MapPin className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground mb-1">
+                <span className="font-semibold text-foreground">Address: </span>
+                Shop No.3, 1621/J2, 16th Main Road, Anna Nagar West, Anna Nagar, Chennai, Tamil Nadu 600040.
+              </p>
+            </div>
+            <div className="flex items-start text-sm text-foreground">
+              <Phone className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground mb-1">
+                <span className="font-semibold text-foreground">Phone: </span>
+                7845129905
+              </p>
+            </div>
+            <div className="flex items-start text-sm text-foreground">
+              <Clock className="w-3 h-3 text-primary mr-3 mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground mb-1">
+                <span className="font-semibold text-foreground">Pickup Time: </span>
+                {form.pickupTime}
+              </p>
+            </div>
 
-            <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-border">
+            {/* <div className="flex flex-col gap-3 mt-3 pt-6 border-t border-border">
               {form.pickupLocation && (
                 <div className="flex items-start text-sm text-foreground">
                   <MapPin className="w-4 h-4 text-primary mr-3 mt-0.5 shrink-0" />
                   <div>
-                    <span className="font-semibold block">Pickup Location</span>
-                    <span className="text-muted-foreground">{form.pickupLocation}</span>
-                  </div>
+                    <span className="block">
+                      <span className="font-semibold text-foreground">Pickup Location: </span>
+                      <span className="text-muted-foreground">{form.pickupLocation}</span>
+                    </span>                  </div>
                 </div>
               )}
               {form.pickupTime && (
                 <div className="flex items-start text-sm text-foreground">
                   <Clock className="w-4 h-4 text-primary mr-3 mt-0.5 shrink-0" />
                   <div>
-                    <span className="font-semibold block">Store Hours</span>
-                    <span className="text-muted-foreground">{form.pickupTime}</span>
-                  </div>
+                    <span className="block">
+                      <span className="font-semibold text-foreground">Pickup Time: </span>
+                      <span className="text-muted-foreground">{form.pickupTime}</span>
+                    </span>                  </div>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -286,19 +390,26 @@ export default function PublicOrderForm() {
       </div>
 
       {/* Floating Checkout Bar */}
-      <div className="fixed bottom-0 left-0 w-full bg-card border-t border-border shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-50 animate-in slide-in-from-bottom duration-300">
-        <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="fixed bottom-0 left-0 w-full bg-card border-t border-border shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-50">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+
           <div>
-            <div className="text-sm text-muted-foreground font-medium mb-0.5">Total ({totalItems} items)</div>
-            <div className="text-2xl font-bold text-foreground">{formatCurrency(totalAmount)}</div>
+            <div className="text-xs text-muted-foreground mb-0.5">
+              Total ({totalItems} items)
+            </div>
+            <div className="text-lg font-semibold text-foreground">
+              {formatCurrency(totalAmount)}
+            </div>
           </div>
+
           <Button
             onClick={handleSubmit}
             disabled={totalItems === 0 || submitMutation.isPending}
-            className="rounded-xl shadow-lg shadow-primary/25 px-8 py-6 h-auto text-lg font-semibold w-auto min-w-[140px]"
+            className="rounded-lg px-5 py-2 text-sm font-medium min-w-[110px]"
           >
             {submitMutation.isPending ? "Submitting..." : "Place Order"}
           </Button>
+
         </div>
       </div>
     </div>
