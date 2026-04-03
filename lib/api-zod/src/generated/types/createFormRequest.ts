@@ -5,16 +5,14 @@
  * Kurryzo Order Management API
  * OpenAPI spec version: 0.1.0
  */
-import type { FormItem } from "./formItem";
+import type { MenuGroup } from "./menuGroup";
 
 export interface CreateFormRequest {
   title: string;
   description?: string | null;
-  items?: FormItem[];
+  items?: MenuGroup[];
   deliveryMode?: string;
   paymentMethod?: string;
   orderDeadline?: string | null;
-  pickupTime?: string | null;
   pickupLocation?: string | null;
-  googleSheetEmail?: string | null;
 }

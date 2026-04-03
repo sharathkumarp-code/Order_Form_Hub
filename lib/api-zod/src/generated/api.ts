@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import * as zod from "zod";
+// Trigger rebuild for quantity string change
 
 /**
  * Returns server health status
@@ -18,7 +19,7 @@ export const HealthCheckResponse = zod.object({
 /**
  * @summary List all forms
  */
-export const listFormsResponseItemsItemMaxQuantityDefault = 10;
+export const listFormsResponseItemsItemItemsItemQuantityDefault = "";
 export const listFormsResponseDeliveryModeDefault = `Pickup Only`;
 export const listFormsResponsePaymentMethodDefault = `Cash on Delivery (COD)`;
 
@@ -30,19 +31,25 @@ export const ListFormsResponseItem = zod.object({
   isPublished: zod.boolean(),
   items: zod.array(
     zod.object({
-      id: zod.string(),
-      name: zod.string(),
-      price: zod.number(),
-      category: zod.string().nullish(),
-      maxQuantity: zod
-        .number()
-        .default(listFormsResponseItemsItemMaxQuantityDefault),
+      groupName: zod.string(),
+      pickupTime: zod.string(),
+      items: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          price: zod.number(),
+          category: zod.string().nullish(),
+          quantity: zod
+            .string()
+            .nullish()
+            .default(listFormsResponseItemsItemItemsItemQuantityDefault),
+        }),
+      ),
     }),
   ),
   deliveryMode: zod.string().default(listFormsResponseDeliveryModeDefault),
   paymentMethod: zod.string().default(listFormsResponsePaymentMethodDefault),
   orderDeadline: zod.string().nullish(),
-  pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
@@ -52,7 +59,7 @@ export const ListFormsResponse = zod.array(ListFormsResponseItem);
 /**
  * @summary Create a new form
  */
-export const createFormBodyItemsItemMaxQuantityDefault = 10;
+export const createFormBodyItemsItemItemsItemQuantityDefault = "";
 export const createFormBodyDeliveryModeDefault = `Pickup Only`;
 export const createFormBodyPaymentMethodDefault = `Cash on Delivery (COD)`;
 
@@ -62,22 +69,27 @@ export const CreateFormBody = zod.object({
   items: zod
     .array(
       zod.object({
-        id: zod.string(),
-        name: zod.string(),
-        price: zod.number(),
-        category: zod.string().nullish(),
-        maxQuantity: zod
-          .number()
-          .default(createFormBodyItemsItemMaxQuantityDefault),
+        groupName: zod.string(),
+        pickupTime: zod.string(),
+        items: zod.array(
+          zod.object({
+            id: zod.string(),
+            name: zod.string(),
+            price: zod.number(),
+            category: zod.string().nullish(),
+            quantity: zod
+              .string()
+              .nullish()
+              .default(createFormBodyItemsItemItemsItemQuantityDefault),
+          }),
+        ),
       }),
     )
     .optional(),
   deliveryMode: zod.string().default(createFormBodyDeliveryModeDefault),
   paymentMethod: zod.string().default(createFormBodyPaymentMethodDefault),
   orderDeadline: zod.string().nullish(),
-  pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
-  googleSheetEmail: zod.string().nullish(),
 });
 
 /**
@@ -87,7 +99,7 @@ export const GetFormParams = zod.object({
   formId: zod.coerce.string(),
 });
 
-export const getFormResponseItemsItemMaxQuantityDefault = 10;
+export const getFormResponseItemsItemItemsItemQuantityDefault = "";
 export const getFormResponseDeliveryModeDefault = `Pickup Only`;
 export const getFormResponsePaymentMethodDefault = `Cash on Delivery (COD)`;
 
@@ -99,19 +111,25 @@ export const GetFormResponse = zod.object({
   isPublished: zod.boolean(),
   items: zod.array(
     zod.object({
-      id: zod.string(),
-      name: zod.string(),
-      price: zod.number(),
-      category: zod.string().nullish(),
-      maxQuantity: zod
-        .number()
-        .default(getFormResponseItemsItemMaxQuantityDefault),
+      groupName: zod.string(),
+      pickupTime: zod.string(),
+      items: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          price: zod.number(),
+          category: zod.string().nullish(),
+          quantity: zod
+            .string()
+            .nullish()
+            .default(getFormResponseItemsItemItemsItemQuantityDefault),
+        }),
+      ),
     }),
   ),
   deliveryMode: zod.string().default(getFormResponseDeliveryModeDefault),
   paymentMethod: zod.string().default(getFormResponsePaymentMethodDefault),
   orderDeadline: zod.string().nullish(),
-  pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
@@ -124,7 +142,7 @@ export const UpdateFormParams = zod.object({
   formId: zod.coerce.string(),
 });
 
-export const updateFormBodyItemsItemMaxQuantityDefault = 10;
+export const updateFormBodyItemsItemItemsItemQuantityDefault = "";
 
 export const UpdateFormBody = zod.object({
   title: zod.string().optional(),
@@ -132,25 +150,30 @@ export const UpdateFormBody = zod.object({
   items: zod
     .array(
       zod.object({
-        id: zod.string(),
-        name: zod.string(),
-        price: zod.number(),
-        category: zod.string().nullish(),
-        maxQuantity: zod
-          .number()
-          .default(updateFormBodyItemsItemMaxQuantityDefault),
+        groupName: zod.string(),
+        pickupTime: zod.string(),
+        items: zod.array(
+          zod.object({
+            id: zod.string(),
+            name: zod.string(),
+            price: zod.number(),
+            category: zod.string().nullish(),
+            quantity: zod
+              .string()
+              .nullish()
+              .default(updateFormBodyItemsItemItemsItemQuantityDefault),
+          }),
+        ),
       }),
     )
     .optional(),
   deliveryMode: zod.string().nullish(),
   paymentMethod: zod.string().nullish(),
   orderDeadline: zod.string().nullish(),
-  pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
-  googleSheetEmail: zod.string().nullish(),
 });
 
-export const updateFormResponseItemsItemMaxQuantityDefault = 10;
+export const updateFormResponseItemsItemItemsItemQuantityDefault = "";
 export const updateFormResponseDeliveryModeDefault = `Pickup Only`;
 export const updateFormResponsePaymentMethodDefault = `Cash on Delivery (COD)`;
 
@@ -162,19 +185,25 @@ export const UpdateFormResponse = zod.object({
   isPublished: zod.boolean(),
   items: zod.array(
     zod.object({
-      id: zod.string(),
-      name: zod.string(),
-      price: zod.number(),
-      category: zod.string().nullish(),
-      maxQuantity: zod
-        .number()
-        .default(updateFormResponseItemsItemMaxQuantityDefault),
+      groupName: zod.string(),
+      pickupTime: zod.string(),
+      items: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          price: zod.number(),
+          category: zod.string().nullish(),
+          quantity: zod
+            .string()
+            .nullish()
+            .default(updateFormResponseItemsItemItemsItemQuantityDefault),
+        }),
+      ),
     }),
   ),
   deliveryMode: zod.string().default(updateFormResponseDeliveryModeDefault),
   paymentMethod: zod.string().default(updateFormResponsePaymentMethodDefault),
   orderDeadline: zod.string().nullish(),
-  pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
@@ -194,7 +223,7 @@ export const PublishFormParams = zod.object({
   formId: zod.coerce.string(),
 });
 
-export const publishFormResponseItemsItemMaxQuantityDefault = 10;
+export const publishFormResponseItemsItemItemsItemQuantityDefault = "";
 export const publishFormResponseDeliveryModeDefault = `Pickup Only`;
 export const publishFormResponsePaymentMethodDefault = `Cash on Delivery (COD)`;
 
@@ -206,19 +235,25 @@ export const PublishFormResponse = zod.object({
   isPublished: zod.boolean(),
   items: zod.array(
     zod.object({
-      id: zod.string(),
-      name: zod.string(),
-      price: zod.number(),
-      category: zod.string().nullish(),
-      maxQuantity: zod
-        .number()
-        .default(publishFormResponseItemsItemMaxQuantityDefault),
+      groupName: zod.string(),
+      pickupTime: zod.string(),
+      items: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          price: zod.number(),
+          category: zod.string().nullish(),
+          quantity: zod
+            .string()
+            .nullish()
+            .default(publishFormResponseItemsItemItemsItemQuantityDefault),
+        }),
+      ),
     }),
   ),
   deliveryMode: zod.string().default(publishFormResponseDeliveryModeDefault),
   paymentMethod: zod.string().default(publishFormResponsePaymentMethodDefault),
   orderDeadline: zod.string().nullish(),
-  pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
@@ -244,6 +279,8 @@ export const GetFormSubmissionsResponseItem = zod.object({
       price: zod.number(),
       quantity: zod.number(),
       total: zod.number(),
+      groupName: zod.string().nullish(),
+      pickupTime: zod.string().nullish(),
     }),
   ),
   totalItems: zod.number(),
@@ -274,6 +311,8 @@ export const SubmitFormBody = zod.object({
       price: zod.number(),
       quantity: zod.number(),
       total: zod.number(),
+      groupName: zod.string().nullish(),
+      pickupTime: zod.string().nullish(),
     }),
   ),
   totalItems: zod.number(),
@@ -294,7 +333,7 @@ export const GetPublicFormParams = zod.object({
   slug: zod.coerce.string(),
 });
 
-export const getPublicFormResponseItemsItemMaxQuantityDefault = 10;
+export const getPublicFormResponseItemsItemItemsItemQuantityDefault = "";
 export const getPublicFormResponseDeliveryModeDefault = `Pickup Only`;
 export const getPublicFormResponsePaymentMethodDefault = `Cash on Delivery (COD)`;
 
@@ -306,13 +345,20 @@ export const GetPublicFormResponse = zod.object({
   isPublished: zod.boolean(),
   items: zod.array(
     zod.object({
-      id: zod.string(),
-      name: zod.string(),
-      price: zod.number(),
-      category: zod.string().nullish(),
-      maxQuantity: zod
-        .number()
-        .default(getPublicFormResponseItemsItemMaxQuantityDefault),
+      groupName: zod.string(),
+      pickupTime: zod.string(),
+      items: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          price: zod.number(),
+          category: zod.string().nullish(),
+          quantity: zod
+            .string()
+            .nullish()
+            .default(getPublicFormResponseItemsItemItemsItemQuantityDefault),
+        }),
+      ),
     }),
   ),
   deliveryMode: zod.string().default(getPublicFormResponseDeliveryModeDefault),
@@ -320,7 +366,6 @@ export const GetPublicFormResponse = zod.object({
     .string()
     .default(getPublicFormResponsePaymentMethodDefault),
   orderDeadline: zod.string().nullish(),
-  pickupTime: zod.string().nullish(),
   pickupLocation: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),

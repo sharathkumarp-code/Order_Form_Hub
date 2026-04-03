@@ -57,7 +57,10 @@ export default function Dashboard() {
   };
 
   const copyLink = (slug: string) => {
-    const url = `${window.location.origin}${import.meta.env.BASE_URL}form/${slug}`;
+    const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+      ? import.meta.env.BASE_URL 
+      : `${import.meta.env.BASE_URL}/`;
+    const url = `${window.location.origin}${baseUrl}form/${slug}`;
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied to clipboard!" });
   };
@@ -140,10 +143,15 @@ export default function Dashboard() {
                     </DropdownMenuItem>
                     {form.isPublished && form.slug && (
                       <DropdownMenuItem
-                        onClick={() => window.open(`${import.meta.env.BASE_URL}form/${form.slug}`, '_blank')}
+                        onClick={() => {
+                          const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+                            ? import.meta.env.BASE_URL 
+                            : `${import.meta.env.BASE_URL}/`;
+                          window.open(`${baseUrl}form/${form.slug}`, '_blank');
+                        }}
                         className="cursor-pointer"
                       >
-                        <Copy className="w-4 h-4 mr-2" />
+                        <ExternalLink className="w-4 h-4 mr-2" />
                         View Live
                       </DropdownMenuItem>
                     )}

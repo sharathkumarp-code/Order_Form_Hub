@@ -19,7 +19,13 @@ export interface FormItem {
   name: string;
   price: number;
   category?: string | null;
-  maxQuantity?: number;
+  quantity?: string | null;
+}
+
+export interface MenuGroup {
+  groupName: string;
+  pickupTime: string;
+  items: FormItem[];
 }
 
 export interface Form {
@@ -28,11 +34,10 @@ export interface Form {
   description?: string | null;
   slug?: string | null;
   isPublished: boolean;
-  items: FormItem[];
+  items: MenuGroup[];
   deliveryMode: string;
   paymentMethod: string;
   orderDeadline?: string | null;
-  pickupTime?: string | null;
   pickupLocation?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -41,25 +46,21 @@ export interface Form {
 export interface CreateFormRequest {
   title: string;
   description?: string | null;
-  items?: FormItem[];
+  items?: MenuGroup[];
   deliveryMode?: string;
   paymentMethod?: string;
   orderDeadline?: string | null;
-  pickupTime?: string | null;
   pickupLocation?: string | null;
-  googleSheetEmail?: string | null;
 }
 
 export interface UpdateFormRequest {
   title?: string;
   description?: string | null;
-  items?: FormItem[];
+  items?: MenuGroup[];
   deliveryMode?: string | null;
   paymentMethod?: string | null;
   orderDeadline?: string | null;
-  pickupTime?: string | null;
   pickupLocation?: string | null;
-  googleSheetEmail?: string | null;
 }
 
 export interface OrderItem {
@@ -68,6 +69,8 @@ export interface OrderItem {
   price: number;
   quantity: number;
   total: number;
+  groupName?: string | null;
+  pickupTime?: string | null;
 }
 
 export interface SubmitOrderRequest {

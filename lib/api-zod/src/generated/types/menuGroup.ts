@@ -5,11 +5,10 @@
  * Kurryzo Order Management API
  * OpenAPI spec version: 0.1.0
  */
+import type { FormItem } from "./formItem";
 
-export interface FormItem {
-  id: string;
-  name: string;
-  price: number;
-  category?: string | null;
-  quantity?: string | null;
+export interface MenuGroup {
+  groupName: string;
+  pickupTime: string;
+  items: FormItem[];
 }
