@@ -55,6 +55,7 @@ function serializeSubmission(sub: typeof submissionsTable.$inferSelect) {
 router.get("/forms", async (req, res) => {
   try {
     const forms = await db.select().from(formsTable).orderBy(
+      sql`${formsTable.isPublished} DESC`,
       sql`${formsTable.createdAt} DESC`,
     );
     res.json(forms.map(serializeForm));

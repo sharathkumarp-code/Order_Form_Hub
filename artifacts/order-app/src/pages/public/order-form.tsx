@@ -302,59 +302,64 @@ export default function PublicOrderForm() {
             </div>
           </div>
 
-          {/* Menu Items — grouped */}
-          <div className="bg-card rounded-2xl shadow-md shadow-black/5 p-8 border border-border/50">
+          {/* Menu Items — redesigned Select Items section */}
+          <div className="bg-card rounded-3xl shadow-sm border border-border/40 p-6 sm:p-8">
             <h3 className="text-xl font-display font-bold text-foreground mb-2 flex items-center">
-              <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm mr-3">2</span>
+              <span className="w-7 h-7 rounded-full bg-transparent border-2 border-primary text-primary flex items-center justify-center text-xs font-bold mr-3 shrink-0">2</span>
               Select Items
             </h3>
-            <p className="text-muted-foreground text-sm mb-6 ml-11">Choose quantities for items you want to order.</p>
+            <p className="text-muted-foreground text-sm mb-8 ml-10">Choose the quantities for the items you want to order.</p>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               {form.items.map((group, gi) => (
-                <div key={gi}>
-                  {/* Group label */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <h4 className="font-bold text-foreground text-base">{group.groupName}</h4>
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground bg-primary/8 text-primary px-2.5 py-1 rounded-full font-medium">
-                      <Clock className="w-3 h-3" /> {group.pickupTime}
+                <div key={gi} className="bg-background/20 rounded-2xl border border-border/50 overflow-hidden border-l-4 border-l-primary shadow-sm shadow-black/[0.02]">
+                  {/* Group header */}
+                  <div className="flex items-center justify-between p-5 pb-2 border-b border-border/30 bg-card/40">
+                    <h4 className="font-bold text-[#1A1C1E] text-lg">{group.groupName}</h4>
+                    <span className="flex items-center gap-1.5 text-[11px] font-semibold text-primary bg-primary/8 px-3 py-1.5 rounded-full uppercase tracking-wide">
+                      <Clock className="w-3.5 h-3.5" /> Pickup: {group.pickupTime}
                     </span>
                   </div>
 
-                  {/* Items in group */}
-                  <div className="space-y-3 pl-1">
+                  {/* Items list */}
+                  <div className="p-5 pt-4 space-y-4">
                     {group.items.map((item) => {
                       const qty = quantities[item.id] || 0;
                       return (
-                        <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-border hover:border-primary/30 transition-colors bg-background/50">
-                            <div className="mb-3 sm:mb-0">
-                              <div className="flex items-center gap-2">
-                                <h5 className="font-semibold text-foreground text-[15px]">{item.name}</h5>
-                                {item.quantity && (
-                                  <span className="text-[10px] font-bold text-primary bg-primary/5 border border-primary/10 px-1.5 py-0.5 rounded uppercase tracking-wider">
-                                    {item.quantity}
-                                  </span>
-                                )}
-                              </div>
+                        <div key={item.id} className="flex flex-row items-center justify-between p-4 rounded-2xl border border-border/80 bg-card shadow-sm hover:shadow-md transition-all duration-200 group">
+                          <div className="flex-1 min-w-0">
+                            <h5 className="font-bold text-[#1A1C1E] text-base mb-1 truncate">{item.name}</h5>
+                            <div className="flex flex-wrap items-center gap-2">
+                              {item.quantity && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#F1F3F5] text-[#5F6368] border border-[#DADCE0]">
+                                  {item.quantity}
+                                </span>
+                              )}
                               {item.category && (
-                                <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full mt-1 inline-block">{item.category}</span>
+                                <span className="text-[11px] text-[#5F6368] font-medium">{item.category}</span>
                               )}
                             </div>
-                          <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
-                            <div className="font-bold text-primary whitespace-nowrap">{formatCurrency(item.price)}</div>
-                            <div className="flex items-center bg-card border border-border rounded-lg p-1 shadow-sm">
+                          </div>
+
+                          <div className="flex items-center gap-4 ml-4">
+                            <div className="font-bold text-primary text-lg">₹{item.price}</div>
+                            <div className="flex items-center bg-background border border-border/60 rounded-xl p-1 shadow-sm h-10">
                               <button
                                 type="button"
                                 onClick={() => handleQuantityChange(item.id, -1)}
-                                className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors disabled:opacity-50"
+                                className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors disabled:opacity-30"
                                 disabled={qty === 0}
-                              >-</button>
-                              <span className="w-8 text-center font-medium text-foreground">{qty}</span>
+                              >
+                                <span className="text-xl font-medium leading-none mb-1">−</span>
+                              </button>
+                              <span className="w-8 text-center font-bold text-foreground text-sm">{qty}</span>
                               <button
                                 type="button"
                                 onClick={() => handleQuantityChange(item.id, 1, 100)}
-                                className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                              >+</button>
+                                className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                              >
+                                <span className="text-xl font-medium leading-none mb-0.5">+</span>
+                              </button>
                             </div>
                           </div>
                         </div>
