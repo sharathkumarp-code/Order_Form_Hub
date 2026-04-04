@@ -39,12 +39,12 @@ export default function LoginPage() {
               initial={{ y: -10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="mx-auto bg-slate-50 p-2 rounded-2xl w-fit mb-2 border border-slate-100 shadow-sm"
+              className="mx-auto bg-slate-50 p-3 rounded-2xl w-fit mb-2 border border-slate-100 shadow-sm"
             >
               <img
-                src="/StoreLogo-2171623.PNG"
+                src="/kurryzo-logo.png"
                 alt="Store"
-                className="w-12 h-12 object-contain rounded-2xl"
+                className="w-full h-full object-cover"
               />
             </motion.div>
             <CardTitle className="text-4xl font-extrabold tracking-tight text-slate-900">

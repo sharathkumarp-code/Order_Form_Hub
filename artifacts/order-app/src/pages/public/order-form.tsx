@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams } from "wouter";
 import { useGetPublicForm, useSubmitForm } from "@workspace/api-client-react";
 import type { OrderItem } from "@workspace/api-client-react";
@@ -13,6 +13,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 
 export default function PublicOrderForm() {
@@ -27,6 +28,28 @@ export default function PublicOrderForm() {
   // quantities keyed by item.id
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Use Refs for stable API access without triggering re-renders
+  const successApiRef = useRef<CarouselApi | null>(null);
+  const formApiRef = useRef<CarouselApi | null>(null);
+
+  // Auto-scroll logic helper
+  const setupAutoScroll = (apiRef: React.MutableRefObject<CarouselApi | null>) => {
+    const intervalId = setInterval(() => {
+      if (apiRef.current) {
+        apiRef.current.scrollNext();
+      }
+    }, 2000); // 5 seconds for better stability
+    return () => clearInterval(intervalId);
+  };
+
+  useEffect(() => {
+    if (isSubmitted) {
+      return setupAutoScroll(successApiRef);
+    } else if (form) {
+      return setupAutoScroll(formApiRef);
+    }
+  }, [isSubmitted, form]);
 
   const handleQuantityChange = (itemId: string, delta: number, max: number = 100) => {
     setQuantities(prev => {
@@ -145,13 +168,7 @@ export default function PublicOrderForm() {
             <div className="relative group overflow-hidden h-28 sm:h-40 bg-black">
               <Carousel
                 className="w-full h-full"
-                setApi={(api) => {
-                  if (api) {
-                    const interval = setInterval(() => { api.scrollNext(); }, 4000);
-                    return () => clearInterval(interval);
-                  }
-                  return undefined;
-                }}
+                setApi={(api) => { successApiRef.current = api; }}
                 opts={{ loop: true, align: "start" }}
               >
                 <CarouselContent className="h-full ml-0">
@@ -236,12 +253,12 @@ export default function PublicOrderForm() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <Button 
+            <Button
               onClick={() => window.location.reload()}
               variant="outline"
               className="w-full rounded-2xl py-6 text-base font-semibold border-2 border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40 transition-all"
             >
-              Order More
+              Order Again
             </Button>
             <p className="text-[10px] text-muted-foreground italic">
               Refresh the page to start a new order
@@ -264,13 +281,7 @@ export default function PublicOrderForm() {
           <div className="relative group overflow-hidden h-28 sm:h-40 bg-black">
             <Carousel
               className="w-full h-full"
-              setApi={(api) => {
-                if (api) {
-                  const interval = setInterval(() => { api.scrollNext(); }, 4000);
-                  return () => clearInterval(interval);
-                }
-                return undefined;
-              }}
+              setApi={(api) => { formApiRef.current = api; }}
               opts={{ loop: true, align: "start" }}
             >
               <CarouselContent className="h-full ml-0">

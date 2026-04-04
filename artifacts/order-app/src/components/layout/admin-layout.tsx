@@ -57,7 +57,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         <nav className="flex-1 px-4 space-y-2">
           <NavLinks />
         </nav>
-        
+
         {/* User Profile & Logout */}
         <div className="p-4 border-t border-border mt-auto bg-muted/30">
           <div className="flex items-center gap-3 px-2 mb-4">
@@ -69,8 +69,8 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               <p className="text-xs text-muted-foreground truncate">Administrator</p>
             </div>
           </div>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive hover:bg-destructive/5 hover:border-destructive/20 transition-all font-medium rounded-xl"
             onClick={logout}
           >
@@ -100,7 +100,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                 <NavLinks />
               </div>
               <div className="p-4 border-t border-border">
-                 <div className="flex items-center gap-3 px-2 mb-4">
+                <div className="flex items-center gap-3 px-2 mb-4">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <UserIcon className="w-4 h-4" />
                   </div>
@@ -109,8 +109,8 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                     <p className="text-xs text-muted-foreground">Administrator</p>
                   </div>
                 </div>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full justify-start gap-2 text-destructive hover:bg-destructive/5 border-destructive/20"
                   onClick={logout}
                 >
