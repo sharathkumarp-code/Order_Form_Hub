@@ -234,6 +234,19 @@ export default function PublicOrderForm() {
               <span className="text-primary">{formatCurrency(totalAmount)}</span>
             </div>
           </div>
+
+          <div className="flex flex-col gap-3">
+            <Button 
+              onClick={() => window.location.reload()}
+              variant="outline"
+              className="w-full rounded-2xl py-6 text-base font-semibold border-2 border-primary/20 text-primary hover:bg-primary/5 hover:border-primary/40 transition-all"
+            >
+              Order More
+            </Button>
+            <p className="text-[10px] text-muted-foreground italic">
+              Refresh the page to start a new order
+            </p>
+          </div>
         </div>
       </div>
     );
