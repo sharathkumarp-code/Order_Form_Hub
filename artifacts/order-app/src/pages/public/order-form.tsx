@@ -140,6 +140,48 @@ export default function PublicOrderForm() {
     return (
       <div className="min-h-screen bg-[#F0F4F8] flex items-center justify-center p-4">
         <div className="bg-card p-8 rounded-3xl shadow-xl shadow-black/5 max-w-lg w-full text-center animate-in fade-in zoom-in duration-500">
+          <div className="bg-card rounded-2xl shadow-md shadow-black/5 overflow-hidden border border-border/50 mb-3">
+            {/* Carousel banner */}
+            <div className="relative group overflow-hidden h-28 sm:h-40 bg-black">
+              <Carousel
+                className="w-full h-full"
+                setApi={(api) => {
+                  if (api) {
+                    const interval = setInterval(() => { api.scrollNext(); }, 4000);
+                    return () => clearInterval(interval);
+                  }
+                  return undefined;
+                }}
+                opts={{ loop: true, align: "start" }}
+              >
+                <CarouselContent className="h-full ml-0">
+                  {["image.png", "image (3).png", "image (4).png", "image (5).png"].map((filename, i) => (
+                    <CarouselItem key={i} className="pl-0 h-full">
+                      <div className="relative h-full w-full flex items-center justify-center bg-black">
+                        <img src={`/carousel/banner/${filename}`} alt={`Banner ${i + 1}`} className="max-h-full object-contain" />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+
+            {/* Info */}
+            <div className="p-4 pt-3">
+              <div className="flex items-start text-sm">
+                <Store className="w-3 h-3 text-primary mr-1 mt-0.5 shrink-0" />
+                <p className="text-xs text-muted-foreground mb-1"><span className="font-semibold text-foreground">Pickup Location: </span>Kurryzo</p>
+              </div>
+              <div className="flex items-start text-sm">
+                <MapPin className="w-3 h-3 text-primary mr-1 mt-0.5 shrink-0" />
+                <p className="text-xs text-muted-foreground mb-1"><span className="font-semibold text-foreground">Address: </span>Shop No.3, 1621/J2, 16th Main Road, Anna Nagar West, Anna Nagar, Chennai, Tamil Nadu 600040.</p>
+              </div>
+              <div className="flex items-start text-sm">
+                <Phone className="w-3 h-3 text-primary mr-1 mt-0.5 shrink-0" />
+                <p className="text-xs text-muted-foreground mb-1"><span className="font-semibold text-foreground">Phone: </span>7845129905</p>
+              </div>
+            </div>
+          </div>
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
@@ -151,7 +193,7 @@ export default function PublicOrderForm() {
           </p>
 
           {/* Store info */}
-          <div className="bg-muted/50 rounded-2xl p-4 mb-5 text-left space-y-1">
+          {/* <div className="bg-muted/50 rounded-2xl p-4 mb-5 text-left space-y-1">
             <div className="flex items-start text-sm">
               <Store className="w-3 h-3 text-primary mr-2 mt-0.5 shrink-0" />
               <p className="text-xs text-muted-foreground"><span className="font-semibold text-foreground">Pickup Location: </span>Kurryzo</p>
@@ -164,7 +206,7 @@ export default function PublicOrderForm() {
               <Phone className="w-3 h-3 text-primary mr-2 mt-0.5 shrink-0" />
               <p className="text-xs text-muted-foreground"><span className="font-semibold text-foreground">Phone: </span>7845129905</p>
             </div>
-          </div>
+          </div> */}
 
           {/* Order summary grouped by pickup group */}
           <div className="bg-muted/50 rounded-2xl p-4 mb-6 text-left space-y-4">

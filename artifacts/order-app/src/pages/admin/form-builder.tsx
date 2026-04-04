@@ -149,10 +149,10 @@ export default function FormBuilder() {
       setLocation("/admin");
     } catch (err: any) {
       const message = err?.data?.message || err?.message || "Failed to save form";
-      toast({ 
-        title: "Failed to save form", 
+      toast({
+        title: "Failed to save form",
         description: message,
-        variant: "destructive" 
+        variant: "destructive"
       });
     }
   };
@@ -227,7 +227,7 @@ export default function FormBuilder() {
                   Organise items into groups, each with a pickup time.
                 </p>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-1 flex-wrap">
                 {/* Download Sample Excel */}
                 <Button
                   variant="outline"
