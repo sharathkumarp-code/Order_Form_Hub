@@ -39,9 +39,13 @@ export default function LoginPage() {
               initial={{ y: -10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="mx-auto bg-slate-50 p-3 rounded-2xl w-fit mb-2 border border-slate-100 shadow-sm"
+              className="mx-auto bg-slate-50 p-2 rounded-2xl w-fit mb-2 border border-slate-100 shadow-sm"
             >
-              <Lock className="w-8 h-8 text-purple-600" />
+              <img
+                src="/StoreLogo-2171623.PNG"
+                alt="Store"
+                className="w-12 h-12 object-contain rounded-2xl"
+              />
             </motion.div>
             <CardTitle className="text-4xl font-extrabold tracking-tight text-slate-900">
               Admin Hub
@@ -83,9 +87,9 @@ export default function LoginPage() {
                   />
                 </div>
               </div>
-              
-              <Button 
-                type="submit" 
+
+              <Button
+                type="submit"
                 className="w-full bg-slate-900 hover:bg-slate-800 h-12 text-lg font-bold shadow-lg shadow-slate-200 transition-all duration-300 transform hover:translate-y-[-1px] active:translate-y-[0px] mt-2 text-white"
                 disabled={isLoading}
               >
