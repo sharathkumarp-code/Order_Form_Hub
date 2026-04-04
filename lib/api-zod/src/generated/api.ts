@@ -223,6 +223,13 @@ export const PublishFormParams = zod.object({
   formId: zod.coerce.string(),
 });
 
+/**
+ * @summary Unpublish a form
+ */
+export const UnpublishFormParams = zod.object({
+  formId: zod.coerce.string(),
+});
+
 export const publishFormResponseItemsItemItemsItemQuantityDefault = "";
 export const publishFormResponseDeliveryModeDefault = `Pickup Only`;
 export const publishFormResponsePaymentMethodDefault = `Cash on Delivery (COD)`;

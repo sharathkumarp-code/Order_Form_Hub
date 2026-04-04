@@ -244,6 +244,28 @@ router.post("/forms/:formId/publish", async (req, res) => {
   }
 });
 
+router.post("/forms/:formId/unpublish", async (req, res) => {
+  try {
+    const { formId } = req.params;
+    const existing = await db
+      .select()
+      .from(formsTable)
+      .where(eq(formsTable.id, formId));
+    if (!existing[0]) {
+      return res.status(404).json({ error: "not_found", message: "Form not found" });
+    }
+    const updated = await db
+      .update(formsTable)
+      .set({ isPublished: false, updatedAt: new Date() })
+      .where(eq(formsTable.id, formId))
+      .returning();
+    res.json(serializeForm(updated[0]));
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).json({ error: "internal_error", message: "Failed to unpublish form" });
+  }
+});
+
 router.get("/forms/:formId/submissions", async (req, res) => {
   try {
     const { formId } = req.params;
