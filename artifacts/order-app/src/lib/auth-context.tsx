@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { toast } from "@/hooks/use-toast";
+import { customFetch } from "@workspace/api-client-react";
 
 type User = {
   username: string;
@@ -27,13 +28,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/auth/login", {
+      const data = await customFetch<{ success: boolean; user: User; message?: string }>("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
       if (data.success) {
         setUser(data.user);
         sessionStorage.setItem("admin_user", JSON.stringify(data.user));
@@ -75,13 +74,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const changePassword = async (newPassword: string) => {
     try {
-      const response = await fetch("/api/auth/change-password", {
+      const data = await customFetch<{ success: boolean; message?: string }>("/api/auth/change-password", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ newPassword }),
       });
 
-      const data = await response.json();
       if (data.success) {
         toast({
           title: "Success",
