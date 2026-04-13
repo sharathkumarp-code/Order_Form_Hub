@@ -6,14 +6,16 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Submissions() {
   const { id } = useParams();
-  
+  const { toast } = useToast();
+
   const { data: form, isLoading: isFormLoading } = useGetForm(id || "");
   const { data: submissions, isLoading: isSubLoading, refetch } = useGetFormSubmissions(id || "");
   const exportMutation = useExportSubmissions(id || "", {
-    query: { 
+    query: {
       enabled: false,
       queryKey: getExportSubmissionsQueryKey(id || "")
     }
@@ -37,6 +39,7 @@ export default function Submissions() {
       }
     } catch (error) {
       console.error("Export failed", error);
+      toast({ title: "Failed to export submissions", description: "Please try again.", variant: "destructive" });
     }
   };
 
