@@ -158,6 +158,7 @@ router.delete("/forms/:formId", async (req, res) => {
     if (!existing[0]) {
       return res.status(404).json({ error: "not_found", message: "Form not found" });
     }
+    await db.delete(submissionsTable).where(eq(submissionsTable.formId, formId));
     await db.delete(formsTable).where(eq(formsTable.id, formId));
     res.status(204).send();
   } catch (err) {
@@ -192,6 +193,13 @@ router.post("/forms/:formId/publish", async (req, res) => {
 router.get("/forms/:formId/submissions", async (req, res) => {
   try {
     const { formId } = req.params;
+    const form = await db
+      .select()
+      .from(formsTable)
+      .where(eq(formsTable.id, formId));
+    if (!form[0]) {
+      return res.status(404).json({ error: "not_found", message: "Form not found" });
+    }
     const subs = await db
       .select()
       .from(submissionsTable)

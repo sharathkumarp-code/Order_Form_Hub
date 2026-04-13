@@ -143,7 +143,7 @@ export default function Dashboard() {
                         onClick={() => window.open(`${import.meta.env.BASE_URL}form/${form.slug}`, '_blank')}
                         className="cursor-pointer"
                       >
-                        <Copy className="w-4 h-4 mr-2" />
+                        <ExternalLink className="w-4 h-4 mr-2" />
                         View Live
                       </DropdownMenuItem>
                     )}

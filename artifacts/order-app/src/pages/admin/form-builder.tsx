@@ -91,6 +91,11 @@ export default function FormBuilder() {
       toast({ title: "Please add at least one item", variant: "destructive" });
       return;
     }
+    const invalidItems = items.filter(item => !item.name.trim() || item.price < 0);
+    if (invalidItems.length > 0) {
+      toast({ title: "All items must have a name and a non-negative price", variant: "destructive" });
+      return;
+    }
 
     const payload: any = {
       title,

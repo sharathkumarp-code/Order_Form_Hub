@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "API Server",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["pnpm", "--filter", "@workspace/api-server", "run", "dev"],
+      "port": 5000
+    },
+    {
+      "name": "Order App (Frontend)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["pnpm", "--filter", "@workspace/order-app", "run", "dev"],
+      "port": 5173
+    },
+    {
+      "name": "Mockup Sandbox",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["pnpm", "--filter", "@workspace/mockup-sandbox", "run", "dev"],
+      "port": 5174
+    }
+  ]
+}
