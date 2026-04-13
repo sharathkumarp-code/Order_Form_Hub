@@ -11,6 +11,7 @@ export * from "./errorResponse";
 export * from "./form";
 export * from "./formItem";
 export * from "./healthStatus";
+export * from "./menuGroup";
 export * from "./orderItem";
 export * from "./submission";
 export * from "./submitOrderRequest";

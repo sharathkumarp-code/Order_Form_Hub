@@ -595,6 +595,90 @@ export const usePublishForm = <
 };
 
 /**
+ * @summary Unpublish a form
+ */
+export const getUnpublishFormUrl = (formId: string) => {
+  return `/api/forms/${formId}/unpublish`;
+};
+
+export const unpublishForm = async (
+  formId: string,
+  options?: RequestInit,
+): Promise<Form> => {
+  return customFetch<Form>(getUnpublishFormUrl(formId), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getUnpublishFormMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unpublishForm>>,
+    TError,
+    { formId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof unpublishForm>>,
+  TError,
+  { formId: string },
+  TContext
+> => {
+  const mutationKey = ["unpublishForm"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof unpublishForm>>,
+    { formId: string }
+  > = (props) => {
+    const { formId } = props ?? {};
+
+    return unpublishForm(formId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UnpublishFormMutationResult = NonNullable<
+  Awaited<ReturnType<typeof unpublishForm>>
+>;
+
+export type UnpublishFormMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Unpublish a form
+ */
+export const useUnpublishForm = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof unpublishForm>>,
+    TError,
+    { formId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof unpublishForm>>,
+  TError,
+  { formId: string },
+  TContext
+> => {
+  return useMutation(getUnpublishFormMutationOptions(options));
+};
+
+/**
  * @summary Get submissions for a form
  */
 export const getGetFormSubmissionsUrl = (formId: string) => {

@@ -6,8 +6,10 @@ export const formItemSchema = z.object({
   id: z.string(),
   name: z.string(),
   price: z.number(),
+  groupName: z.string(),
+  pickupTime: z.string(),
   category: z.string().nullable().optional(),
-  maxQuantity: z.number().int().default(10),
+  quantity: z.string().nullable().optional().default(""),
 });
 
 export type FormItem = z.infer<typeof formItemSchema>;
@@ -22,7 +24,6 @@ export const formsTable = pgTable("forms", {
   deliveryMode: text("delivery_mode").notNull().default("Pickup Only"),
   paymentMethod: text("payment_method").notNull().default("Cash on Delivery (COD)"),
   orderDeadline: text("order_deadline"),
-  pickupTime: text("pickup_time"),
   pickupLocation: text("pickup_location"),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),

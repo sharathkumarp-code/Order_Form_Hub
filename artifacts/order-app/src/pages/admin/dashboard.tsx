@@ -1,4 +1,9 @@
-import { useListForms, useDeleteForm, usePublishForm } from "@workspace/api-client-react";
+import { 
+  useListForms, 
+  useDeleteForm, 
+  usePublishForm,
+  useUnpublishForm 
+} from "@workspace/api-client-react";
 import { AdminLayout } from "@/components/layout/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -10,7 +15,6 @@ import {
   Trash2,
   Globe,
   ListOrdered,
-  Share2,
   Copy,
   ExternalLink,
   ClipboardList
@@ -31,6 +35,7 @@ export default function Dashboard() {
   const { data: forms, isLoading } = useListForms();
   const deleteForm = useDeleteForm();
   const publishForm = usePublishForm();
+  const unpublishForm = useUnpublishForm();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -56,8 +61,21 @@ export default function Dashboard() {
     }
   };
 
+  const handleUnpublish = async (id: string) => {
+    try {
+      await unpublishForm.mutateAsync({ formId: id });
+      toast({ title: "Form unpublished successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/forms"] });
+    } catch (error) {
+      toast({ title: "Failed to unpublish form", variant: "destructive" });
+    }
+  };
+
   const copyLink = (slug: string) => {
-    const url = `${window.location.origin}${import.meta.env.BASE_URL}form/${slug}`;
+    const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+      ? import.meta.env.BASE_URL 
+      : `${import.meta.env.BASE_URL}/`;
+    const url = `${window.location.origin}${baseUrl}form/${slug}`;
     navigator.clipboard.writeText(url);
     toast({ title: "Link copied to clipboard!" });
   };
@@ -140,16 +158,25 @@ export default function Dashboard() {
                     </DropdownMenuItem>
                     {form.isPublished && form.slug && (
                       <DropdownMenuItem
-                        onClick={() => window.open(`${import.meta.env.BASE_URL}form/${form.slug}`, '_blank')}
+                        onClick={() => {
+                          const baseUrl = import.meta.env.BASE_URL.endsWith('/') 
+                            ? import.meta.env.BASE_URL 
+                            : `${import.meta.env.BASE_URL}/`;
+                          window.open(`${baseUrl}form/${form.slug}`, '_blank');
+                        }}
                         className="cursor-pointer"
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         View Live
                       </DropdownMenuItem>
                     )}
-                    {!form.isPublished && (
+                    {!form.isPublished ? (
                       <DropdownMenuItem onClick={() => handlePublish(form.id)} className="cursor-pointer">
                         <Globe className="w-4 h-4 mr-2" /> Publish Form
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem onClick={() => handleUnpublish(form.id)} className="cursor-pointer">
+                        <Globe className="w-4 h-4 mr-2 opacity-50" /> Unpublish Form
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />

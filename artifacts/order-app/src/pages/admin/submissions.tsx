@@ -128,8 +128,21 @@ export default function Submissions() {
                       <ul className="space-y-1">
                         {sub.items.map((item, idx) => (
                           <li key={idx} className="text-sm">
-                            <span className="font-medium text-foreground">{item.quantity}x</span> {item.itemName} 
-                            <span className="text-muted-foreground text-xs ml-1">({formatCurrency(item.price)})</span>
+                            <div className="flex flex-col">
+                              <div>
+                                <span className="font-medium text-foreground">{item.quantity}x</span> {item.itemName} 
+                                <span className="text-muted-foreground text-xs ml-1">({formatCurrency(item.price)})</span>
+                              </div>
+                              {(item.groupName || item.pickupTime) && (
+                                <div className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                                  <span className="font-medium uppercase tracking-wider bg-muted px-1.5 py-0.5 rounded">
+                                    {item.groupName || "N/A"}
+                                  </span>
+                                  <span>•</span>
+                                  <span>{item.pickupTime || "N/A"}</span>
+                                </div>
+                              )}
+                            </div>
                           </li>
                         ))}
                       </ul>

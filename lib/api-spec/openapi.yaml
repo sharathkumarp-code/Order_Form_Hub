@@ -152,6 +152,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/Form"
 
+  /forms/{formId}/unpublish:
+    post:
+      operationId: unpublishForm
+      tags: [forms]
+      summary: Unpublish a form
+      parameters:
+        - name: formId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Form unpublished
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Form"
+
   /forms/{formId}/submissions:
     get:
       operationId: getFormSubmissions
@@ -279,13 +298,30 @@ components:
         category:
           type: string
           nullable: true
-        maxQuantity:
-          type: integer
-          default: 10
+        quantity:
+          type: string
+          nullable: true
+          default: ""
       required:
         - id
         - name
         - price
+
+    MenuGroup:
+      type: object
+      properties:
+        groupName:
+          type: string
+        pickupTime:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/FormItem"
+      required:
+        - groupName
+        - pickupTime
+        - items
 
     Form:
       type: object
@@ -305,7 +341,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/FormItem"
+            $ref: "#/components/schemas/MenuGroup"
         deliveryMode:
           type: string
           default: "Pickup Only"
@@ -313,9 +349,6 @@ components:
           type: string
           default: "Cash on Delivery (COD)"
         orderDeadline:
-          type: string
-          nullable: true
-        pickupTime:
           type: string
           nullable: true
         pickupLocation:
@@ -347,7 +380,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/FormItem"
+            $ref: "#/components/schemas/MenuGroup"
         deliveryMode:
           type: string
           default: "Pickup Only"
@@ -355,9 +388,6 @@ components:
           type: string
           default: "Cash on Delivery (COD)"
         orderDeadline:
-          type: string
-          nullable: true
-        pickupTime:
           type: string
           nullable: true
         pickupLocation:
@@ -378,7 +408,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/FormItem"
+            $ref: "#/components/schemas/MenuGroup"
         deliveryMode:
           type: string
           nullable: true
@@ -386,9 +416,6 @@ components:
           type: string
           nullable: true
         orderDeadline:
-          type: string
-          nullable: true
-        pickupTime:
           type: string
           nullable: true
         pickupLocation:
@@ -409,6 +436,12 @@ components:
           type: integer
         total:
           type: number
+        groupName:
+          type: string
+          nullable: true
+        pickupTime:
+          type: string
+          nullable: true
       required:
         - itemId
         - itemName

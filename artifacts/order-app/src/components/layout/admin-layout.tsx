@@ -1,11 +1,13 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { ClipboardList, LayoutDashboard, Settings, Menu, Store } from "lucide-react";
+import { ClipboardList, LayoutDashboard, Settings, Menu, Store, LogOut, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/lib/auth-context";
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { name: "Forms Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -40,7 +42,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card shadow-sm z-10 sticky top-0 h-screen">
         <div className="p-6 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25">
+          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25 overflow-hidden">
             <img
               src="/StoreLogo-2171623.PNG"
               alt="Store"
@@ -55,6 +57,27 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         <nav className="flex-1 px-4 space-y-2">
           <NavLinks />
         </nav>
+
+        {/* User Profile & Logout */}
+        <div className="p-4 border-t border-border mt-auto bg-muted/30">
+          <div className="flex items-center gap-3 px-2 mb-4">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center text-white">
+              <UserIcon className="w-4 h-4" />
+            </div>
+            <div className="flex flex-col min-w-0">
+              <p className="text-sm font-semibold text-foreground truncate">{user?.username || "Admin"}</p>
+              <p className="text-xs text-muted-foreground truncate">Administrator</p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive hover:bg-destructive/5 hover:border-destructive/20 transition-all font-medium rounded-xl"
+            onClick={logout}
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </Button>
+        </div>
       </aside>
 
       {/* Mobile Header */}
@@ -72,8 +95,29 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-72">
-            <div className="p-2 pt-6 space-y-2">
-              <NavLinks />
+            <div className="flex flex-col h-full">
+              <div className="p-2 pt-6 space-y-2 flex-1">
+                <NavLinks />
+              </div>
+              <div className="p-4 border-t border-border">
+                <div className="flex items-center gap-3 px-2 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <UserIcon className="w-4 h-4" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <p className="text-sm font-semibold text-foreground truncate">{user?.username}</p>
+                    <p className="text-xs text-muted-foreground">Administrator</p>
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-2 text-destructive hover:bg-destructive/5 border-destructive/20"
+                  onClick={logout}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </Button>
+              </div>
             </div>
           </SheetContent>
         </Sheet>
